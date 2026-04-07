@@ -11,8 +11,9 @@ const COLORS = {
     forest: '#2D5016',
     surface: '#F7FFF0',
     white: '#FFFFFF',
-    text: '#1A2E0E',
+    text: '#375f21',
     textMuted: '#6B7F5E',
+    accent: '#CDFF42',
 }
 
 const PRESETS_GLOW: PresetConfig = {
