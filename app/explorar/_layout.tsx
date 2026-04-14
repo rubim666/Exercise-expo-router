@@ -3,23 +3,26 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
 import { CustomDrawerContent } from '../../components/CustomDrawerComponents';
 import { COLORS } from '@/constants';
+import { useTheme } from '@/app/contexts/ThemeContext';
 
 const ExplorarLayout = () => {
+    const { colors } = useTheme();
+
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />} screenOptions={{
                     drawerStyle: { 
-                        width: 240,
-                        backgroundColor: COLORS.primary
+                        width: 260,
+                        backgroundColor: 'transparent',
                      },
-                     drawerActiveTintColor: '#fff',
-                     drawerInactiveTintColor: '#fff',
-                     headerStyle: { backgroundColor: COLORS.primary },
-                     headerTintColor: '#fff',
+                            drawerActiveTintColor: colors.white,
+                            drawerInactiveTintColor: colors.white,
+                     headerStyle: { backgroundColor: colors.primary },
+                            headerTintColor: colors.white,
                      headerTitleStyle: { fontWeight: 'bold' },
                      drawerLabelStyle: { 
                         fontSize: 16,
-                        color: COLORS.text,
+                        color: colors.text,
                       }
             }}>
                 <Drawer.Screen
@@ -57,6 +60,16 @@ const ExplorarLayout = () => {
                         drawerLabel: 'Sair',
                         drawerIcon: () => null,
                      }}
+                />
+
+                <Drawer.Screen
+                    name="favoritos"
+                    options={{
+                        title: 'Favoritos',
+                        drawerLabel: 'Favoritos',
+                        drawerIcon: () => null,
+                        drawerItemStyle: { display: 'none' },
+                    }}
                 />
                 
             </Drawer>

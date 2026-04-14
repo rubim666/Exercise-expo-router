@@ -60,7 +60,7 @@ const STORAGE_KEY_CONTAS = "@trailnav:contas";
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
  
 // children é para indicar que a function vai ser renderizada em outros componentes (?)
-export default function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
  
     const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [carregando, setCarregando] = useState(true);

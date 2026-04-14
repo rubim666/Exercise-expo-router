@@ -8,12 +8,13 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SHADOWS, TRILHAS_LISTA } from "../constants/index";
+import { COLORS, DIFFICULTY_COLORS, SHADOWS, TRILHAS_LISTA } from "../constants/index";
 import type { Dificuldade } from "../constants/index";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const HERO_HEIGHT = 300;
@@ -21,11 +22,7 @@ const CARD_WIDTH = SCREEN_WIDTH * 0.62;
 const CARD_HEIGHT = 180;
 
 // helpers
-const difficultyColor: Record<Dificuldade, string> = {
-    "Fácil": "#4CAF50",
-    "Média": "#FF9800",
-    "Difícil": "#F44336",
-};
+const difficultyColor: Record<Dificuldade, string> = DIFFICULTY_COLORS;
 
 function StarRating({ nota }: { nota: number }) {
     const full = Math.floor(nota);
@@ -40,11 +37,11 @@ function StarRating({ nota }: { nota: number }) {
                         key={i}
                         name={name as any}
                         size={12}
-                        color="#FFD700"
+                        color={COLORS.rating}
                     />
                 );
             })}
-            <Text style={styles.ratingText}>{nota.toFixed(1)}</Text>
+            <Text style={{ fontSize: 11, color: COLORS.rating, fontWeight: "600", marginLeft: 2 }}>{nota.toFixed(1)}</Text>
         </View>
     );
 }
@@ -103,6 +100,8 @@ function PressCard({
 }
 
 const HomeScreen = () => {
+    const { themeName } = useTheme();
+    const styles = useMemo(() => createStyles(), [themeName]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState<string>("Todas");
 
@@ -326,7 +325,7 @@ const HomeScreen = () => {
                                                           {trilha.dificuldade}
                                                       </Text>
                                                   </View>
-                                                  <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.7)" />
+                                                  <Ionicons name="chevron-forward" size={16} color={COLORS.overlaySoft} />
                                               </View>
 
                                               <View style={styles.trailCardBottom}>
@@ -359,7 +358,7 @@ const HomeScreen = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = () => StyleSheet.create({
     root: {
         flex: 1,
         backgroundColor: COLORS.surface,
@@ -384,7 +383,7 @@ const styles = StyleSheet.create({
         width: 68,
         height: 68,
         borderRadius: 34,
-        backgroundColor: "rgba(255,255,255,0.92)",
+        backgroundColor: COLORS.overlayStrong,
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 14,
@@ -393,13 +392,13 @@ const styles = StyleSheet.create({
     heroTitle: {
         fontSize: 34,
         fontWeight: "800",
-        color: "#FFFFFF",
+        color: COLORS.white,
         letterSpacing: 1.5,
         marginBottom: 6,
     },
     heroSubtitle: {
         fontSize: 14,
-        color: "rgba(255,255,255,0.85)",
+        color: COLORS.overlaySoft,
         textAlign: "center",
         marginBottom: 14,
         lineHeight: 20,
@@ -408,7 +407,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 4,
-        backgroundColor: "rgba(255,255,255,0.92)",
+        backgroundColor: COLORS.overlayStrong,
         paddingHorizontal: 12,
         paddingVertical: 5,
         borderRadius: 20,
@@ -443,7 +442,7 @@ const styles = StyleSheet.create({
         width: 42,
         height: 42,
         borderRadius: 21,
-        backgroundColor: "rgba(255,255,255,0.25)",
+        backgroundColor: COLORS.overlayFaint,
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 10,
@@ -451,12 +450,12 @@ const styles = StyleSheet.create({
     actionCardTitle: {
         fontSize: 18,
         fontWeight: "800",
-        color: "#FFFFFF",
+        color: COLORS.white,
         lineHeight: 20,
     },
     actionCardSub: {
         fontSize: 13,
-        color: "rgba(255,255,255,0.75)",
+        color: COLORS.overlaySoft,
         fontWeight: "500",
     },
     sectionHeader: {
@@ -483,7 +482,7 @@ const styles = StyleSheet.create({
         borderRadius: 24,
     },
     chipActiveText: {
-        color: "#FFFFFF",
+        color: COLORS.white,
         fontWeight: "700",
         fontSize: 13,
     },
@@ -518,12 +517,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 12,
-        backgroundColor: "rgba(255,255,255,0.2)",
+        backgroundColor: COLORS.overlayCard,
     },
     diffPillText: {
         fontSize: 11,
         fontWeight: "700",
-        color: "#FFFFFF",
+        color: COLORS.white,
     },
     trailCardBottom: {
         gap: 3,
@@ -531,11 +530,11 @@ const styles = StyleSheet.create({
     trailCardName: {
         fontSize: 16,
         fontWeight: "800",
-        color: "#FFFFFF",
+        color: COLORS.white,
     },
     trailCardLocal: {
         fontSize: 11,
-        color: "rgba(255,255,255,0.75)",
+        color: COLORS.overlaySoft,
         marginBottom: 4,
     },
     trailCardMeta: {
@@ -555,7 +554,7 @@ const styles = StyleSheet.create({
     },
     ratingText: {
         fontSize: 11,
-        color: "#FFD700",
+        color: COLORS.rating,
         fontWeight: "600",
         marginLeft: 2,
     },

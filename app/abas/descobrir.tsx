@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
     View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity,
     Animated, Dimensions,
@@ -6,16 +6,13 @@ import {
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS, SHADOWS, TRILHAS_LISTA } from "@/constants";
+import { COLORS, DIFFICULTY_COLORS, SHADOWS, TRILHAS_LISTA } from "@/constants";
 import type { Dificuldade } from "@/constants";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const difficultyColor: Record<Dificuldade, string> = {
-    "Fácil": "#4CAF50",
-    "Média": "#FF9800",
-    "Difícil": "#F44336",
-};
+const difficultyColor: Record<Dificuldade, string> = DIFFICULTY_COLORS;
 
 function StarRating({ nota }: { nota: number }) {
     const full = Math.floor(nota);
@@ -25,9 +22,9 @@ function StarRating({ nota }: { nota: number }) {
             {Array.from({ length: 5 }).map((_, i) => {
                 const name =
                     i < full ? "star" : i === full && half ? "star-half" : "star-outline";
-                return <Ionicons key={i} name={name as any} size={13} color="#FFD700" />;
+                return <Ionicons key={i} name={name as any} size={13} color={COLORS.rating} />;
             })}
-            <Text style={{ fontSize: 12, color: "#FFD700", fontWeight: "600", marginLeft: 3 }}>
+            <Text style={{ fontSize: 12, color: COLORS.rating, fontWeight: "600", marginLeft: 3 }}>
                 {nota.toFixed(1)}
             </Text>
         </View>
@@ -35,6 +32,8 @@ function StarRating({ nota }: { nota: number }) {
 }
 
 export default function Descobrir() {
+    const { themeName } = useTheme();
+    const styles = useMemo(() => createStyles(), [themeName]);
     const [search, setSearch] = useState("");
     const [activeFilter, setActiveFilter] = useState<string>("Todas");
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -149,7 +148,7 @@ export default function Descobrir() {
                             <Ionicons
                                 name="trail-sign"
                                 size={32}
-                                color="rgba(255,255,255,0.25)"
+                                color={COLORS.overlayFaint}
                             />
                         </LinearGradient>
                         <View style={styles.cardBody}>
@@ -187,7 +186,7 @@ export default function Descobrir() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = () => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.surface,
@@ -245,7 +244,7 @@ const styles = StyleSheet.create({
         borderRadius: 24,
     },
     chipActiveText: {
-        color: "#FFFFFF",
+        color: COLORS.white,
         fontWeight: "700",
         fontSize: 13,
     },
@@ -280,7 +279,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     cardDiffBadge: {
-        backgroundColor: "rgba(255,255,255,0.22)",
+        backgroundColor: COLORS.overlaySubtle,
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 12,
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
     cardDiffText: {
         fontSize: 11,
         fontWeight: "700",
-        color: "#FFFFFF",
+        color: COLORS.white,
     },
     cardBody: {
         padding: 14,

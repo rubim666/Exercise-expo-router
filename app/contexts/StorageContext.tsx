@@ -67,5 +67,43 @@ export function StorageProvider({children}: {children: React.ReactNode}) {
 
     const salvarProgresso = useCallback(async (trilhaId: string, tempoMinutos: number) => {
         if (!chaveProgresso) return;
+
+        const novaEntrada: ProgressoTrilha = {
+            trilhaId,
+            completaEm: new Date().toISOString(),
+            tempoMinutos,
+        }
+        const novoProgresso = [...progresso, novaEntrada];
+        setProgresso(novoProgresso);
+        await AsyncStorage.setItem(chaveProgresso, JSON.stringify(novoProgresso));
     }, [chaveProgresso, progresso]);
+
+    const limparDados = useCallback(async () => {
+        if(!usuario) return;
+
+        await Promise.all([
+            chaveFavoritos ? AsyncStorage.removeItem(chaveFavoritos) : Promise.resolve(),
+            chaveProgresso ? AsyncStorage.removeItem(chaveProgresso) : Promise.resolve(),
+        ])
+        setFavoritos([]);
+        setProgresso([]);
+        return;
+    }
+    , [chaveFavoritos, chaveProgresso, usuario]);
+
+    return (
+        <StorageContext.Provider value={{ favoritos, progresso, carregando, isFavorito, alternarFavorito, salvarProgresso, limparDados }}>
+            {children}
+        </StorageContext.Provider>
+    );
+}
+
+export function useStorage() {
+    const ctx = useContext(StorageContext);
+
+    if (!ctx) {
+        throw new Error("useStorage deve ser usado dentro de um StorageProvider");
+    }
+    return ctx;
+
 }

@@ -1,11 +1,14 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SHADOWS, TRILHAS_LISTA, USUARIO } from "@/constants";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 export default function MinhasTrilhas() {
+    const { themeName } = useTheme();
+    const styles = useMemo(() => createStyles(), [themeName]);
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -95,7 +98,7 @@ export default function MinhasTrilhas() {
                         </View>
                         <View style={styles.cardRight}>
                             <View style={styles.ratingBadge}>
-                                <Ionicons name="star" size={12} color="#FFD700" />
+                                <Ionicons name="star" size={12} color={COLORS.rating} />
                                 <Text style={styles.ratingText}>{trilha.nota.toFixed(1)}</Text>
                             </View>
                             <Ionicons name="chevron-forward" size={18} color={COLORS.textMuted} />
@@ -129,7 +132,7 @@ export default function MinhasTrilhas() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = () => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.surface,
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
     statLabel: {
         fontSize: 10,
         fontWeight: "600",
-        color: "rgba(255,255,255,0.8)",
+        color: COLORS.overlayMedium,
     },
     sectionTitle: {
         fontSize: 17,

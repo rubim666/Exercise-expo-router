@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
     View, Text, TouchableOpacity, StyleSheet, Switch, ScrollView, Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS, SHADOWS } from "@/constants";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 interface OptionSwitch {
     id: string;
@@ -35,6 +36,8 @@ const options: OptionSwitch[] = [
 ];
 
 export default function Config() {
+    const { themeName } = useTheme();
+    const styles = useMemo(() => createStyles(), [themeName]);
     const [states, setStates] = useState<Record<string, boolean>>({
         notificacoes: true,
         gps: true,
@@ -113,7 +116,7 @@ export default function Config() {
                                     {
                                         backgroundColor: states[option.id]
                                             ? COLORS.tertiary
-                                            : "#F0F0F0",
+                                            : COLORS.neutralSoft,
                                     },
                                 ]}
                             >
@@ -130,8 +133,8 @@ export default function Config() {
                             <Switch
                                 value={states[option.id]}
                                 onValueChange={() => toggle(option.id)}
-                                trackColor={{ false: "#E0E0E0", true: COLORS.secondary }}
-                                thumbColor={states[option.id] ? COLORS.forest : "#FAFAFA"}
+                                trackColor={{ false: COLORS.neutralTrack, true: COLORS.secondary }}
+                                thumbColor={states[option.id] ? COLORS.forest : COLORS.neutralThumb}
                             />
                         </View>
                     </View>
@@ -143,7 +146,7 @@ export default function Config() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = () => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.surface,
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
     },
     barBg: {
         height: 6,
-        backgroundColor: "rgba(255,255,255,0.25)",
+        backgroundColor: COLORS.overlayFaint,
         borderRadius: 3,
         overflow: "hidden",
     },

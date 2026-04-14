@@ -2,12 +2,22 @@ import { router } from "expo-router";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS, SHADOWS, TRILHAS_LISTA } from "@/constants";
+import { COLORS, DIFFICULTY_BADGE_COLORS, DIFFICULTY_COLORS, SHADOWS, TRILHAS_LISTA } from "@/constants";
+import type { Dificuldade } from "@/constants";
+import { useMemo } from "react";
+import { useTheme } from "@/app/contexts/ThemeContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function Mapa() {
+    const { themeName } = useTheme();
+    const styles = useMemo(() => createStyles(), [themeName]);
     const trails = Object.values(TRILHAS_LISTA);
+
+    const getDifficultyColors = (dificuldade: Dificuldade) => ({
+        backgroundColor: DIFFICULTY_BADGE_COLORS[dificuldade],
+        color: DIFFICULTY_COLORS[dificuldade],
+    });
 
     return (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -65,6 +75,9 @@ export default function Mapa() {
             <Text style={styles.sectionTitle}>Trilhas Próximas</Text>
 
             {trails.map((trilha) => (
+                (() => {
+                    const difficultyColors = getDifficultyColors(trilha.dificuldade);
+                    return (
                 <TouchableOpacity
                     key={trilha.id}
                     style={[styles.card, SHADOWS.card]}
@@ -85,8 +98,8 @@ export default function Mapa() {
                     <View style={styles.cardContent}>
                         <View style={styles.cardTop}>
                             <Text style={styles.cardName}>{trilha.nome}</Text>
-                            <View style={[styles.diffBadge, { backgroundColor: trilha.dificuldade === 'Fácil' ? '#E8F5E9' : trilha.dificuldade === 'Média' ? '#FFF3E0' : '#FFEBEE' }]}>
-                                <Text style={[styles.diffText, { color: trilha.dificuldade === 'Fácil' ? '#4CAF50' : trilha.dificuldade === 'Média' ? '#FF9800' : '#F44336' }]}>
+                            <View style={[styles.diffBadge, { backgroundColor: difficultyColors.backgroundColor }]}>
+                                <Text style={[styles.diffText, { color: difficultyColors.color }]}>
                                     {trilha.dificuldade}
                                 </Text>
                             </View>
@@ -108,6 +121,8 @@ export default function Mapa() {
                     </View>
                     <Ionicons name="chevron-forward" size={20} color={COLORS.textMuted} />
                 </TouchableOpacity>
+                    );
+                })()
             ))}
 
             <View style={{ height: 24 }} />
@@ -115,7 +130,7 @@ export default function Mapa() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = () => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.surface,
@@ -160,7 +175,7 @@ const styles = StyleSheet.create({
     },
     mapText: {
         fontSize: 14,
-        color: "rgba(255,255,255,0.6)",
+        color: COLORS.overlayLight,
         fontWeight: "600",
         marginTop: 8,
     },

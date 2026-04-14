@@ -2,37 +2,40 @@ import { Tabs, router } from 'expo-router';
 import { COLORS, SHADOWS } from '../../constants/index';
 import { TouchableOpacity, View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/app/contexts/ThemeContext';
 
 const AbasLayout = () => {
+    const { colors, shadows } = useTheme();
+
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: COLORS.forest,
-                tabBarInactiveTintColor: COLORS.textMuted,
+                tabBarActiveTintColor: colors.forest,
+                tabBarInactiveTintColor: colors.textMuted,
                 tabBarStyle: {
-                    backgroundColor: COLORS.white,
+                    backgroundColor: colors.white,
                     borderTopWidth: 0,
                     height: Platform.OS === 'ios' ? 88 : 64,
                     paddingBottom: Platform.OS === 'ios' ? 24 : 8,
                     paddingTop: 8,
-                    ...SHADOWS.sm,
+                    ...shadows.sm,
                 },
                 tabBarLabelStyle: {
                     fontSize: 11,
                     fontWeight: '600',
                 },
                 headerStyle: {
-                    backgroundColor: COLORS.white,
-                    ...SHADOWS.sm,
+                    backgroundColor: colors.white,
+                    ...shadows.sm,
                 },
-                headerTintColor: COLORS.forest,
+                headerTintColor: colors.forest,
                 headerTitleStyle: { fontWeight: '700', fontSize: 18 },
                 headerLeft: () => (
                     <TouchableOpacity
                         onPress={() => router.replace('/')}
                         style={{ marginLeft: 16, padding: 4 }}
                     >
-                        <Ionicons name="arrow-back" size={24} color={COLORS.forest} />
+                        <Ionicons name="arrow-back" size={24} color={colors.forest} />
                     </TouchableOpacity>
                 ),
             }}
